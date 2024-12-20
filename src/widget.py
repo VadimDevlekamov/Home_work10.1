@@ -1,5 +1,6 @@
 from .masks import get_mask_card_number, get_mask_account
 import re
+from datetime import datetime
 
 
 def mask_account_card(account_info: str) -> str:
@@ -17,6 +18,17 @@ def mask_account_card(account_info: str) -> str:
         return f"{account_type} {get_mask_card_number(account_number)}"
     else:
         raise ValueError("Неверный номер карты. Номер карты должен состоять из 16 цифр.")
+
+
+def get_date(date_string: str) -> str:
+    """Преобразуем дату из формата 'YYYY-MM-DDTHH:MM:SS.ffffff' в формат 'ДД.ММ.ГГГГ'."""
+    dt = datetime.fromisoformat(date_string)
+    return dt.strftime("%d.%m.%Y")
+
+
+
+
+
 
 
 
