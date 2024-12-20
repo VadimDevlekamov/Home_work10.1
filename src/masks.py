@@ -1,6 +1,3 @@
-from typing import Union
-
-
 def get_mask_card_number(card_number: str) -> str:
     """Убираем все пробелы из номера карты и возвращаем замаскированный номер"""
     card_number = card_number.replace(" ", "")
