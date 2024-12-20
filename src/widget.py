@@ -7,8 +7,10 @@ def mask_account_card(account_info: str) -> str:
     '''Функция определяющая тип и номер'''
 
     match = re.match(r"(.+?)\s+(\d+)", account_info)
+    if not match:
+        raise ValueError("Некорректный формат ввода. Ожидался тип и номер.")
 
-    account_type = match.group(1).strip()  # Удаляем лишние пробелы
+    account_type = match.group(1).strip() # Удаляем лишние пробелы
     account_number = match.group(2).strip()
 
     if account_type == "Счет":
