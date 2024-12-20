@@ -26,4 +26,5 @@ def mask_account_card(account_info: str) -> str:
 def get_date(date_string: str) -> str:
     """Преобразуем дату из формата 'YYYY-MM-DDTHH:MM:SS.ffffff' в формат 'ДД.ММ.ГГГГ'."""
     dt = datetime.fromisoformat(date_string)
+
     return dt.strftime("%d.%m.%Y")
