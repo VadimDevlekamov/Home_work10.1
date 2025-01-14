@@ -60,24 +60,24 @@ def transactions() -> List[Dict[str, Any]]:
 
 def test_filter_by_currency(transactions: List[Dict[str, Any]]) -> None:
     # Тест правильной фильтрации USD
-    usd_transactions = list(filter_by_currency(transactions, "USD"))
+    usd_transactions: List[Dict[str, Any]] = list(filter_by_currency(transactions, "USD"))
     assert len(usd_transactions) == 3
     assert all(tx["operationAmount"]["currency"]["code"] == "USD" for tx in usd_transactions)
 
     # Тест фильтрации, когда валюты отсутствуют
-    rub_transactions = list(filter_by_currency(transactions, "RUB"))
+    rub_transactions: List[Dict[str, Any]] = list(filter_by_currency(transactions, "RUB"))
     assert len(rub_transactions) == 2
     assert all(tx["operationAmount"]["currency"]["code"] == "RUB" for tx in rub_transactions)
 
     # Тест на пустой список
     empty_transactions: List[Dict[str, Any]] = []
-    empty_result = list(filter_by_currency(empty_transactions, "USD"))
+    empty_result: List[Dict[str, Any]] = list(filter_by_currency(empty_transactions, "USD"))
     assert empty_result == []
 
 
 def test_transaction_descriptions(transactions: List[Dict[str, Any]]) -> None:
     # Тест возвращения описаний транзакций
-    descriptions = list(transaction_descriptions(transactions))
+    descriptions: List[str] = list(transaction_descriptions(transactions))
     assert len(descriptions) == 5
     assert descriptions == [
         "Перевод организации",
@@ -88,13 +88,13 @@ def test_transaction_descriptions(transactions: List[Dict[str, Any]]) -> None:
     ]
 
     # Тест с пустым списком транзакций
-    empty_descriptions = list(transaction_descriptions([]))
+    empty_descriptions: List[str] = list(transaction_descriptions([]))
     assert empty_descriptions == []
 
 
 def test_card_number_generator() -> None:
     # Тест генерации номеров карт
-    card_numbers = list(card_number_generator(1, 5))
+    card_numbers: List[str] = list(card_number_generator(1, 5))
     assert len(card_numbers) == 5
     assert card_numbers == [
         "0001 0001 0001 0001",
@@ -105,9 +105,9 @@ def test_card_number_generator() -> None:
     ]
 
     # Тест генератора с одним значением
-    single_number = list(card_number_generator(10, 10))
+    single_number: List[str] = list(card_number_generator(10, 10))
     assert single_number == ["0010 0010 0010 0010"]
 
     # Тест генератора с пустым диапазоном
-    empty_range = list(card_number_generator(5, 1))
+    empty_range: List[str] = list(card_number_generator(5, 1))
     assert empty_range == []
