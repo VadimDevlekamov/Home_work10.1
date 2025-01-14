@@ -102,3 +102,20 @@ def test_filter_by_currency(transactions):
     empty_transactions = []
     empty_result = list(filter_by_currency(empty_transactions, "USD"))
     assert empty_result == []
+
+
+def test_transaction_descriptions(transactions):
+    # Тест возвращения описаний транзакций
+    descriptions = list(transaction_descriptions(transactions))
+    assert len(descriptions) == 5
+    assert descriptions == [
+        "Перевод организации",
+        "Перевод со счета на счет",
+        "Перевод со счета на счет",
+        "Перевод с карты на карту",
+        "Перевод организации"
+    ]
+
+    # Тест с пустым списком транзакций
+    empty_descriptions = list(transaction_descriptions([]))
+    assert empty_descriptions == []
