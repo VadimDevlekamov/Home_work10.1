@@ -119,3 +119,24 @@ def test_transaction_descriptions(transactions):
     # Тест с пустым списком транзакций
     empty_descriptions = list(transaction_descriptions([]))
     assert empty_descriptions == []
+
+
+def test_card_number_generator():
+    # Тест генерации номеров карт
+    card_numbers = list(card_number_generator(1, 5))
+    assert len(card_numbers) == 5
+    assert card_numbers == [
+        "0001 0001 0001 0001",
+        "0002 0002 0002 0002",
+        "0003 0003 0003 0003",
+        "0004 0004 0004 0004",
+        "0005 0005 0005 0005"
+    ]
+
+    # Тест генератора с одним значением
+    single_number = list(card_number_generator(10, 10))
+    assert single_number == ["0010 0010 0010 0010"]
+
+    # Тест генератора с пустым диапазоном
+    empty_range = list(card_number_generator(5, 1))
+    assert empty_range == []
