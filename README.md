@@ -28,4 +28,4 @@ python descriptions = list(transaction_descriptions(transactions))
 Генерирует номера банковских карт в заданном диапазоне.
 
 **Пример использования:**
-python card_numbers = list(card_number_generator(1, 5))
+python card_numbers = list(card_number_generator(1, 5))   
