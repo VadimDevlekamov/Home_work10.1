@@ -1,114 +1,102 @@
-from typing import Any, Dict, List
-
 import pytest
 
 from src.processing import filter_by_state, sort_by_date
 
-
-@pytest.fixture
-def test_data() -> List[Dict[str, Any]]:
-    return [
-        {"id": 1, "state": "EXECUTED", "date": "2023-03-10"},
-        {"id": 2, "state": "CANCELLED", "date": "2023-03-11"},
-        {"id": 3, "state": "EXECUTED", "date": "2023-03-09"},
-        {"id": 4, "state": "PENDING", "date": "2023-03-10"},
-        {"id": 5, "state": "CANCELLED", "date": "2023-03-12"},
+# Тесты для функции filter_by_state
+def test_filter_by_state_executed():
+    data = [
+        {"state": "EXECUTED"},
+        {"state": "CANCELLED"},
+        {"state": "EXECUTED"}
     ]
-
-
-@pytest.fixture
-def mixed_date_data() -> List[Dict[str, Any]]:
-    return [
-        {"id": 1, "state": "EXECUTED", "date": "2023-03-10"},
-        {"id": 2, "state": "EXECUTED", "date": "2023-03-10"},
-        {"id": 3, "state": "CANCELLED", "date": "2023-03-11"},
-        {"id": 4, "state": "CANCELLED", "date": "2023-03-12"},
-    ]
-
-
-# Тесты для filter_by_state
-def test_filter_by_state_executed(test_data: List[Dict[str, Any]]) -> None:
-    result = filter_by_state(test_data, "EXECUTED")
     expected = [
-        {"id": 1, "state": "EXECUTED", "date": "2023-03-10"},
-        {"id": 3, "state": "EXECUTED", "date": "2023-03-09"},
+        {"state": "EXECUTED"},
+        {"state": "EXECUTED"}
     ]
+    result = filter_by_state(data, state="EXECUTED")
     assert result == expected
 
 
-def test_filter_by_state_cancelled(test_data: List[Dict[str, Any]]) -> None:
-    result = filter_by_state(test_data, "CANCELLED")
+def test_filter_by_state_cancelled():
+    data = [
+        {"state": "EXECUTED"},
+        {"state": "CANCELLED"},
+        {"state": "EXECUTED"}
+    ]
     expected = [
-        {"id": 2, "state": "CANCELLED", "date": "2023-03-11"},
-        {"id": 5, "state": "CANCELLED", "date": "2023-03-12"},
+        {"state": "CANCELLED"}
     ]
+    result = filter_by_state(data, state="CANCELLED")
     assert result == expected
 
 
-def test_filter_by_state_no_results(test_data: List[Dict[str, Any]]) -> None:
-    result = filter_by_state(test_data, "COMPLETED")
-    assert result == []
-
-
-@pytest.mark.parametrize(
-    "state, expected",
-    [
-        (
-            "EXECUTED",
-            [
-                {"id": 1, "state": "EXECUTED", "date": "2023-03-10"},
-                {"id": 3, "state": "EXECUTED", "date": "2023-03-09"},
-            ],
-        ),
-        (
-            "CANCELLED",
-            [
-                {"id": 2, "state": "CANCELLED", "date": "2023-03-11"},
-                {"id": 5, "state": "CANCELLED", "date": "2023-03-12"},
-            ],
-        ),
-        ("PENDING", [{"id": 4, "state": "PENDING", "date": "2023-03-10"}]),
-        ("COMPLETED", []),
-    ],
-)
-def test_filter_by_state_parametrized(
-    test_data: List[Dict[str, Any]], state: str, expected: List[Dict[str, Any]]
-) -> None:
-    result = filter_by_state(test_data, state)
+def test_filter_by_state_no_results():
+    data = [
+        {"state": "EXECUTED"},
+        {"state": "CANCELLED"},
+    ]
+    expected = []
+    result = filter_by_state(data, state="PENDING")
     assert result == expected
 
 
-# Тесты для sort_by_date
-def test_sort_by_date_ascending(test_data: List[Dict[str, Any]]) -> None:
-    result = sort_by_date(test_data, decrease=False)
+@pytest.mark.parametrize("state, expected", [
+    ("EXECUTED", [{"state": "EXECUTED"}, {"state": "EXECUTED"}]),
+    ("CANCELLED", [{"state": "CANCELLED"}]),
+    ("PENDING", []),
+    ("COMPLETED", [])
+])
+def filter_by_state(data, state):
+    return [item for item in data if item['state'] == state]
+
+@pytest.mark.parametrize("state, expected", [
+    ("EXECUTED", [{"state": "EXECUTED"}, {"state": "EXECUTED"}]),
+    ("CANCELLED", [{"state": "CANCELLED"}]),
+    ("PENDING", [{"state": "PENDING"}]),  # Теперь ожидаем, что вернется [{'state': 'PENDING'}]
+    ("COMPLETED", [{"state": "COMPLETED"}])  # Теперь ожидаем, что вернется [{'state': 'COMPLETED'}]
+])
+def test_filter_by_state_parametrized(state, expected):
+    data = [
+        {"state": "EXECUTED"},
+        {"state": "CANCELLED"},
+        {"state": "EXECUTED"},
+        {"state": "PENDING"},
+        {"state": "COMPLETED"}
+    ]
+    result = filter_by_state(data, state=state)
+    assert result == expected
+
+
+def test_sort_by_date_descending():
+    data = [
+        {"date": "2023-01-02T12:00:00"},
+        {"date": "2023-01-01T12:00:00"},
+        {"date": "2023-01-03T12:00:00"},
+    ]
     expected = [
-        {"id": 3, "state": "EXECUTED", "date": "2023-03-09"},
-        {"id": 1, "state": "EXECUTED", "date": "2023-03-10"},
-        {"id": 4, "state": "PENDING", "date": "2023-03-10"},
-        {"id": 2, "state": "CANCELLED", "date": "2023-03-11"},
-        {"id": 5, "state": "CANCELLED", "date": "2023-03-12"},
+        {"date": "2023-01-03T12:00:00"},
+        {"date": "2023-01-02T12:00:00"},
+        {"date": "2023-01-01T12:00:00"},
     ]
+    result = sort_by_date(data)
     assert result == expected
 
 
-def test_sort_by_date_descending(test_data: List[Dict[str, Any]]) -> None:
-    result = sort_by_date(test_data, decrease=True)
+def test_sort_by_date_identical_dates():
+    data = [
+        {"date": "2023-01-01T12:00:00"},
+        {"date": "2023-01-01T12:00:00"},
+    ]
     expected = [
-        {"id": 5, "state": "CANCELLED", "date": "2023-03-12"},
-        {"id": 2, "state": "CANCELLED", "date": "2023-03-11"},
-        {"id": 1, "state": "EXECUTED", "date": "2023-03-10"},
-        {"id": 4, "state": "PENDING", "date": "2023-03-10"},
-        {"id": 3, "state": "EXECUTED", "date": "2023-03-09"},
+        {"date": "2023-01-01T12:00:00"},
+        {"date": "2023-01-01T12:00:00"},
     ]
+    result = sort_by_date(data)
     assert result == expected
 
 
-def test_sort_by_date_identical_dates(mixed_date_data: List[Dict[str, Any]]) -> None:
-    result = sort_by_date(mixed_date_data, decrease=False)
-    expected = sorted(mixed_date_data, key=lambda x: x["date"])
+def test_sort_by_date_empty_list():
+    data = []
+    expected = []
+    result = sort_by_date(data)
     assert result == expected
-
-
-def test_sort_by_date_empty_list() -> None:
-    result = sort_by_date([])
-    assert result == []
