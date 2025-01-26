@@ -1,39 +1,38 @@
 import functools
 import logging
-import sys
+from typing import Callable, Any, Optional
 
-def log(filename=None):
-    # Создаем и настраиваем логгер
-    logger = logging.getLogger('FunctionLogger')
-    logger.setLevel(logging.DEBUG)
+def log(filename: Optional[str] = None) -> Callable:
+    """Декоратор для логирования вызовов функции и их результатов."""
 
-    # Создаем обработчик
+    # Настройка логирования
     if filename:
-        handler = logging.FileHandler(filename)
+        logging.basicConfig(filename=filename, level=logging.INFO,
+                            format='%(asctime)s - %(levelname)s - %(message)s')
     else:
-        handler = logging.StreamHandler(sys.stdout)
+        logging.basicConfig(level=logging.INFO,
+                            format='%(asctime)s - %(levelname)s - %(message)s')
 
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    def decorator(func):
+    def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            # Логирование входных параметров
-            logger.info(f'Вызов функции: {func.__name__}, аргументы: {args}, {kwargs}')
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
+                # Логируем входные параметры функции
+                logging.info(f'Вызов функции {func.__name__} с аргументами: args={args}, kwargs={kwargs}')
+
+                # Выполняем функцию
                 result = func(*args, **kwargs)
-                # Логирование результата
-                logger.info(f'Функция: {func.__name__} завершилась успешно, результат: {result}')
+
+                # Логируем результат
+                logging.info(f'Функция {func.__name__} вернула результат: {result}')
                 return result
             except Exception as e:
-                # Логирование ошибки без трассировки стека
-                logger.error(f'Ошибка в функции: {func.__name__}, аргументы: {args}, {kwargs}, ошибка: {str(e)}')
-                raise  # Перекинем исключение дальше
+                # Логируем ошибку и входные параметры
+                logging.error(
+                    f'Ошибка в функции {func.__name__}: {type(e).__name__}. Входные параметры: args={args}, kwargs={kwargs}')
+                logging.exception('Произошла ошибка')
+                raise
 
         return wrapper
 
     return decorator
-
-
