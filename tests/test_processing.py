@@ -1,5 +1,4 @@
 import unittest
-from datetime import datetime
 
 from src.processing import filter_by_state, get_date, mask_account_card, sort_by_date
 

@@ -3,7 +3,7 @@ import logging
 import pytest
 from _pytest.logging import LogCaptureFixture
 
-from src.decorators import log  # Замените на реальный путь к вашему декоратору
+from src.decorators import log
 
 
 # Настройка логирования для тестирования

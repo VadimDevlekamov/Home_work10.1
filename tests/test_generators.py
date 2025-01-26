@@ -2,11 +2,9 @@ from typing import Any, Dict, List
 
 import pytest
 
-# Импортируйте функции из вашего модуля
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 
 
-# Пример входных данных для тестов
 @pytest.fixture
 def transactions() -> List[Dict[str, Any]]:
     return [
@@ -59,7 +57,7 @@ def transactions() -> List[Dict[str, Any]]:
 
 
 def test_filter_by_currency(transactions: List[Dict[str, Any]]) -> None:
-    # Тест правильной фильтрации USD
+    """Тест правильной фильтрации USD"""
     usd_transactions: List[Dict[str, Any]] = list(filter_by_currency(transactions, "USD"))
     assert len(usd_transactions) == 3
     assert all(tx["operationAmount"]["currency"]["code"] == "USD" for tx in usd_transactions)
@@ -76,7 +74,7 @@ def test_filter_by_currency(transactions: List[Dict[str, Any]]) -> None:
 
 
 def test_transaction_descriptions(transactions: List[Dict[str, Any]]) -> None:
-    # Тест возвращения описаний транзакций
+    """Тест возвращения описаний транзакций"""
     descriptions: List[str] = list(transaction_descriptions(transactions))
     assert len(descriptions) == 5
     assert descriptions == [
@@ -93,7 +91,7 @@ def test_transaction_descriptions(transactions: List[Dict[str, Any]]) -> None:
 
 
 def test_card_number_generator() -> None:
-    # Тест генерации номеров карт
+    """Тест генерации номеров карт"""
     card_numbers: List[str] = list(card_number_generator(1, 5))
     assert len(card_numbers) == 5
     assert card_numbers == [
