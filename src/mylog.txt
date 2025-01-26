@@ -1,0 +1,4 @@
+Вызов функции: my_function с аргументами: (1, 2), {}
+my_function ok. Результат: 3
+Вызов функции: my_function_with_error с аргументами: (1, 0), {}
+my_function_with_error error: ZeroDivisionError. Inputs: (1, 0), {}
