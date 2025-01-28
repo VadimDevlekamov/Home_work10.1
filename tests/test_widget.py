@@ -1,37 +1,51 @@
-import pytest
+import unittest
 
 from src.widget import get_date, mask_account_card
 
 
-def test_mask_account_card() -> None:
-    """Тесты с правильными данными"""
-    assert mask_account_card("Счет 1234567890") == "Счет **7890"
-    assert mask_account_card("Карта 1234567890123456") == "Карта 1234 56** **** 3456"
+class TestMaskingFunctions(unittest.TestCase):
 
-    # Параметризованные тесты
-    test_cases: list[tuple[str, str]] = [
-        ("Счет 123456", "Счет **3456"),
-        ("Карта 8765432187654321", "Карта 8765 43** **** 4321"),
-    ]
+    def test_mask_account_card_valid_account(self) -> None:
+        """Тестирование корректного ввода счета"""
+        account_info: str = "Счет 12345678901234567890"
+        expected_output: str = "Счет **7890"
+        result: str = mask_account_card(account_info)
+        self.assertEqual(result, expected_output)
 
-    for account_info, expected in test_cases:
-        assert mask_account_card(account_info) == expected
+    def test_mask_account_card_valid_card(self) -> None:
+        """Тестирование корректного ввода карты"""
+        account_info: str = "Карта 1234567812345678"
+        expected_output: str = "Карта 1234 56** **** 5678"
+        result: str = mask_account_card(account_info)
+        self.assertEqual(result, expected_output)
 
-    # Тесты с некорректными данными
-    with pytest.raises(ValueError):
-        mask_account_card("Некорректный Ввод")
+    def test_mask_account_card_invalid_card_length(self) -> None:
+        """Тестирование неверного ввода карточного номера"""
+        account_info: str = "Карта 123"
+        with self.assertRaises(ValueError) as context:
+            mask_account_card(account_info)
+        self.assertEqual(str(context.exception), "Неверный номер карты. Номер карты должен состоять из 16 цифр.")
 
-    with pytest.raises(ValueError):
-        mask_account_card("Карта 1234567890")  # Неправильный номер карты
+    def test_mask_account_card_invalid_format(self) -> None:
+        """Тестирование некорректного формата ввода"""
+        account_info: str = "Некорректный ввод"
+        with self.assertRaises(ValueError) as context:
+            mask_account_card(account_info)
+        self.assertEqual(str(context.exception), "Некорректный формат ввода. Ожидался тип и номер.")
+
+    def test_get_date_valid_format(self) -> None:
+        """Тестирование корректного ввода даты"""
+        date_string: str = "2023-10-01T12:30:45.123456"
+        expected_output: str = "01.10.2023"
+        result: str = get_date(date_string)
+        self.assertEqual(result, expected_output)
+
+    def test_get_date_invalid_format(self) -> None:
+        """Тестирование некорректного формата даты"""
+        date_string: str = "2023/10/01"
+        with self.assertRaises(ValueError):
+            get_date(date_string)
 
 
-# Тесты для get_date
-def test_get_date() -> None:
-    assert get_date("2023-03-10T14:30:00") == "10.03.2023"
-    assert get_date("2021-01-01T00:00:00") == "01.01.2021"
-
-    with pytest.raises(ValueError):
-        get_date("Некорректная Строка")  # Некорректный формат даты
-
-    with pytest.raises(ValueError):
-        get_date("")  # Пустая строка
+if __name__ == "__main__":
+    unittest.main()
