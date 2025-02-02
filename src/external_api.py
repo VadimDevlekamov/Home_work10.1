@@ -24,7 +24,6 @@ def convert_transaction_to_rub(transaction: dict) -> float:
     if response.status_code != 200:
         return 0.0
 
-    #
     data = response.json()
     if currency == "USD":
         return amount * data["rates"]["RUB"]
