@@ -96,6 +96,49 @@
 python
 @log('app.log') def my_function():
 
+
+# Currency Converter
+
+Этот проект предоставляет функцию конвертации валют из USD и EUR в RUB с использованием API для получения актуальных курсов обмена.
+
+## Установка
+
+1. Склонировать репозиторий:
+bash git clone https://github.com/ваш_репозиторий.git cd ваш_репозиторий
+
+2. Установите необходимые зависимости:
+bash pip install -r requirements.txt
+
+   Убедитесь, что у вас установлены `requests` и `python-dotenv`. Если файла `requirements.txt` нет, создайте его с содержимым:
+plaintext requests python-dotenv
+
+3. Создайте файл `.env` в корне проекта и добавьте ваш API ключ:
+plaintext API_KEY=ваш_api_ключ
+
+## Использование
+
+Для конвертации суммы из одной валюты в другую, используйте функцию `convert_transaction_to_rub`.
+
+### Пример:
+python from external_api import convert_transaction_to_rub
+transaction = { "amount": 100.0, # Сумма для конвертации "currency": "USD" # Валюта, которую нужно конвертировать }
+
+result = convert_transaction_to_rub(transaction) print(f"Сумма в RUB: {result}") ```
+
+Обработка ошибок
+Если валюта не поддерживается (например, JPY), функция вызовет исключение ValueError.
+Если API вернет статус-код, отличный от 200, функция вернет 0.0.
+Тестирование
+Проект включает юнит-тесты. Для запуска тестов выполните:
+
+python -m unittest discover -s tests
+Тесты проверяют:
+
+Конвертацию USD и EUR в RUB
+Конвертацию RUB в RUB
+Обработку ошибок API
+Не поддерживаемые валюты
+
 # Ваша функция
 
 ## Пример Использования
