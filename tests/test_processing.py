@@ -9,7 +9,7 @@ class TestFunctions(unittest.TestCase):
     def test_mask_account_card_valid_account(self) -> None:
         """Тестирование корректного ввода счета"""
         account_info: str = "Счет 12345678901234567890"
-        expected_output: str = "Счет **7890"  # Изменено в соответствии с фактическим результатом
+        expected_output: str = "Счет **7890"
         result: str = mask_account_card(account_info)
         self.assertEqual(result, expected_output)
 

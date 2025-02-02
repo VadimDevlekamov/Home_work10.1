@@ -62,12 +62,10 @@ def test_filter_by_currency(transactions: List[Dict[str, Any]]) -> None:
     assert len(usd_transactions) == 3
     assert all(tx["operationAmount"]["currency"]["code"] == "USD" for tx in usd_transactions)
 
-    # Тест фильтрации, когда валюты отсутствуют
     rub_transactions: List[Dict[str, Any]] = list(filter_by_currency(transactions, "RUB"))
     assert len(rub_transactions) == 2
     assert all(tx["operationAmount"]["currency"]["code"] == "RUB" for tx in rub_transactions)
 
-    # Тест на пустой список
     empty_transactions: List[Dict[str, Any]] = []
     empty_result: List[Dict[str, Any]] = list(filter_by_currency(empty_transactions, "USD"))
     assert empty_result == []
@@ -85,7 +83,6 @@ def test_transaction_descriptions(transactions: List[Dict[str, Any]]) -> None:
         "Перевод организации",
     ]
 
-    # Тест с пустым списком транзакций
     empty_descriptions: List[str] = list(transaction_descriptions([]))
     assert empty_descriptions == []
 
@@ -102,10 +99,8 @@ def test_card_number_generator() -> None:
         "0005 0005 0005 0005",
     ]
 
-    # Тест генератора с одним значением
     single_number: List[str] = list(card_number_generator(10, 10))
     assert single_number == ["0010 0010 0010 0010"]
 
-    # Тест генератора с пустым диапазоном
     empty_range: List[str] = list(card_number_generator(5, 1))
     assert empty_range == []
