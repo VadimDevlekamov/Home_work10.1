@@ -9,7 +9,7 @@ BASE_URL = "https://api.apilayer.com/exchangerates_data/"
 
 
 def convert_transaction_to_rub(transaction: dict) -> float:
-    '''Доступ к вложенному словарю'''
+    """Доступ к вложенному словарю"""
     operation_amount = transaction.get("operationAmount", {})
 
     amount_str = operation_amount.get("amount", "0.0")
