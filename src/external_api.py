@@ -1,5 +1,4 @@
 import os
-
 import requests
 from dotenv import load_dotenv
 
@@ -10,22 +9,28 @@ BASE_URL = "https://api.apilayer.com/exchangerates_data/"
 
 
 def convert_transaction_to_rub(transaction: dict) -> float:
-    currency = transaction.get("currency")
-    amount = transaction.get("amount")
+    '''Доступ к вложенному словарю'''
+    operation_amount = transaction.get("operationAmount", {})
 
-    if currency == "RUB":
+    amount_str = operation_amount.get("amount", "0.0")
+    currency_code = operation_amount.get("currency", {}).get("code", "")
+
+    try:
+        amount = float(amount_str)
+    except ValueError:
+        raise ValueError("Invalid amount value")
+
+    if currency_code == "RUB":
         return amount
 
-    if currency not in ["USD", "EUR"]:
+    if currency_code not in ["USD", "EUR"]:
         raise ValueError("Unsupported currency")
 
-    response = requests.get(f"{BASE_URL}latest?base={currency}", headers={"apikey": API_KEY})
+    response = requests.get(f"{BASE_URL}latest?base={currency_code}", headers={"apikey": API_KEY})
 
     if response.status_code != 200:
         return 0.0
 
     data = response.json()
-    if currency == "USD":
-        return amount * data["rates"]["RUB"]
-    elif currency == "EUR":
-        return amount * data["rates"]["RUB"]
+
+    return amount * data["rates"]["RUB"]
