@@ -40,3 +40,4 @@ print(sorted_canceled_transactions)
 sorted_all_transactions = sort_by_date(transactions)
 print("\nAll transactions sorted by date (decrease):")
 print(sorted_all_transactions)
+
