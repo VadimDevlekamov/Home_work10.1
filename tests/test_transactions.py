@@ -1,4 +1,4 @@
-from unittest.mock import patch, mock_open
+from unittest.mock import mock_open, patch
 
 import pandas as pd
 
@@ -11,7 +11,7 @@ def test_read_transactions_from_csv():
     with patch("builtins.open", mock_open(read_data=mock_csv_data)):
         transactions = read_transactions_from_csv("dummy_path.csv")
         assert len(transactions) == 1
-        assert transactions[0]['amount'] == '100'
+        assert transactions[0]["amount"] == "100"
 
 
 def test_read_transactions_from_excel():
@@ -19,4 +19,4 @@ def test_read_transactions_from_excel():
     with patch("pandas.read_excel", return_value=mock_df):
         transactions = read_transactions_from_excel("dummy_path.xlsx")
         assert len(transactions) == 1
-        assert transactions[0]['amount'] == 100
+        assert transactions[0]["amount"] == 100
